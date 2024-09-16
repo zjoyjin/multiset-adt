@@ -69,6 +69,8 @@ https://github.com/CSC207-2024F-UofT/multiset-adt
   you might choose to work on that first, push that branch to the remote, make a pull request to merge it
   into main, and then everyone on your team will need to make sure their fork and local copies are
   up-to-date with the latest code.
+  - There are some `TODOs` included in the `src/` directory which suggest possible tasks to be worked on; feel free
+  to use these or to make your own tasks or subtasks to be done as your team sees fit.
 
 - [ ] When someone on your team has made a pull request, a subset of your team should take the time
   to review it. You can pull their branch from the remote repository and try running the code locally
