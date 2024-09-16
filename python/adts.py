@@ -28,7 +28,6 @@ from __future__ import annotations
 
 import random
 import time
-from typing import Any, Optional
 
 
 class MultiSet:
@@ -40,19 +39,19 @@ class MultiSet:
     so it just inherits Object.__init__.
     """
 
-    def add(self, item: Any) -> bool:
+    def add(self, item: int) -> None:
         raise NotImplementedError
 
-    def remove(self, item: Any) -> None:
+    def remove(self, item: int) -> None:
         raise NotImplementedError
 
-    def contains(self, item: Any) -> bool:
+    def contains(self, item: int) -> bool:
         raise NotImplementedError
 
     def is_empty(self) -> bool:
         raise NotImplementedError
 
-    def count(self, item: Any) -> int:
+    def count(self, item: int) -> int:
         raise NotImplementedError
 
     def size(self) -> int:
@@ -68,7 +67,7 @@ class Tree:
     """
     # === Private Attributes ===
     # The item stored at this tree's root, or None if the tree is empty.
-    _root: Optional[Any]
+    _root: int | None
     # The list of all subtrees of this tree.
     _subtrees: list[Tree]
 
@@ -80,7 +79,7 @@ class Tree:
     #   This setting of attributes represents a tree consisting of just one
     #   node.
 
-    def __init__(self, root: Optional[Any],
+    def __init__(self, root: int | None,
                  subtrees: None | list[Tree] = None) -> None:
         """Initialize a new Tree with the given root value and subtrees.
 
@@ -123,7 +122,7 @@ class Tree:
                 size += subtree.__len__()  # could also do len(subtree) here
             return size
 
-    def count(self, item: Any) -> int:
+    def count(self, item: int) -> int:
         """Return the number of occurrences of <item> in this tree.
         >>> t = Tree(3, [Tree(4, []), Tree(1, [])])
         >>> t.count(3)
@@ -144,7 +143,7 @@ class Tree:
     def __str__(self) -> str:
         """Return a string representation of this tree.
 
-        For each node, its item is printed before any of its
+        For each node, its item is printed before int of its
         descendants' items. The output is nicely indented.
 
         You may find this method helpful for debugging.
@@ -243,7 +242,7 @@ class Tree:
 
             return self._subtrees == other._subtrees
 
-    def __contains__(self, item: Any) -> bool:
+    def __contains__(self, item: int) -> bool:
         """Return whether <item> is in this tree.
 
         >>> t = Tree(1, [Tree(2, []), Tree(5, [])])
@@ -266,7 +265,7 @@ class Tree:
                     return True
             return False
 
-    def leaves(self) -> list:
+    def leaves(self) -> list[int]:
         """Return a list of all the leaf items in the tree.
 
         >>> Tree(None, []).leaves()
@@ -294,7 +293,7 @@ class Tree:
     # -------------------------------------------------------------------------
     # Mutating methods
     # -------------------------------------------------------------------------
-    def delete_item(self, item: Any) -> bool:
+    def delete_item(self, item: int) -> bool:
         """Delete *one* occurrence of the given item from this tree.
 
         Return True if <item> was deleted, and False otherwise.
@@ -348,7 +347,7 @@ class Tree:
                     pass
 
             # If we don't return inside the loop, the item is not deleted
-            # from any of the subtrees. In this case, the item does not
+            # from int of the subtrees. In this case, the item does not
             # appear in this tree.
             return False
 
@@ -374,7 +373,7 @@ class Tree:
             # 2. Update self._root. (Note that self._subtrees remains the same.)
             # self._root = leaf
 
-    def _extract_leaf(self) -> Any:
+    def _extract_leaf(self) -> int:
         """Remove and return the leftmost leaf in a tree.
 
         Precondition: this tree is non-empty.
@@ -392,7 +391,7 @@ class Tree:
 
             return leaf
 
-    def insert(self, item: Any) -> None:
+    def insert(self, item: int) -> None:
         """Insert <item> into this tree using the following algorithm.
 
             1. If the tree is empty, <item> is the new root of the tree.
@@ -429,7 +428,7 @@ class Tree:
                 subtree_index = random.randint(0, len(self._subtrees) - 1)
                 self._subtrees[subtree_index].insert(item)
 
-    def insert_child(self, item: Any, parent: Any) -> bool:
+    def insert_child(self, item: int, parent: int) -> bool:
         """Insert <item> into this tree as a child of <parent>.
 
         If successful, return True. If <parent> is not in this tree,
@@ -460,20 +459,19 @@ class TreeMultiSet(MultiSet):
     def __init__(self):
         self._tree = Tree(None)
 
-    def add(self, item: Any) -> bool:
+    def add(self, item: int) -> None:
         self._tree.insert(item)
-        return True  # always returns True!
 
-    def remove(self, item: Any) -> None:
+    def remove(self, item: int) -> None:
         self._tree.delete_item(item)
 
-    def contains(self, item: Any) -> bool:
+    def contains(self, item: int) -> bool:
         return item in self._tree
 
     def is_empty(self) -> bool:
         return self._tree.is_empty()
 
-    def count(self, item: Any) -> int:
+    def count(self, item: int) -> int:
         return self._tree.count(item)
 
     def size(self) -> int:
@@ -487,23 +485,22 @@ class ArrayListMultiSet(MultiSet):
     def __init__(self):
         self._list = []
 
-    def add(self, item: Any) -> bool:
+    def add(self, item: int) -> None:
         self._list.append(item)
-        return True
 
-    def remove(self, item: Any) -> None:
+    def remove(self, item: int) -> None:
         # we check that the item exists to avoid raising a ValueError,
         # since the MultiSet ADT doesn't say it will raise such an error!
         if item in self._list:
             self._list.remove(item)
 
-    def contains(self, item: Any) -> bool:
+    def contains(self, item: int) -> bool:
         return item in self._list
 
     def is_empty(self) -> bool:
         return len(self._list) == 0
 
-    def count(self, item: Any) -> int:
+    def count(self, item: int) -> int:
         return self._list.count(item)
 
     def size(self) -> int:
@@ -527,14 +524,13 @@ class LinkedListMultiSet(MultiSet):
         self._front = None
         self._size = 0
 
-    def add(self, item: Any) -> bool:
+    def add(self, item: int) -> None:
         new_node = _Node(item)
         new_node.next = self._front
         self._front = new_node
         self._size += 1
-        return True
 
-    def remove(self, item: Any) -> None:
+    def remove(self, item: int) -> None:
         cur = self._front
         prev = None
         while cur is not None:
@@ -549,7 +545,7 @@ class LinkedListMultiSet(MultiSet):
         # if here, item not found
         return
 
-    def contains(self, item: Any) -> bool:
+    def contains(self, item: int) -> bool:
         cur = self._front
         while cur is not None:
             if cur.item == item:
@@ -560,7 +556,7 @@ class LinkedListMultiSet(MultiSet):
     def is_empty(self) -> bool:
         return self._front is None
 
-    def count(self, item: Any) -> int:
+    def count(self, item: int) -> int:
         num_seen = 0
         cur = self._front
         while cur is not None:
@@ -577,10 +573,10 @@ class _Node:
     """
     Internal node structure used by the LinkedListMultiSet above.
     """
-    item: Any
+    item: int
     next: _Node | None
 
-    def __init__(self, item: Any) -> None:
+    def __init__(self, item: int) -> None:
         self.item = item
         self.next = None
 
